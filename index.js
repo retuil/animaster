@@ -1,6 +1,22 @@
 addListeners();
 
 function animaster() {
+    function resetFadeIn(element){
+        element.style.transitionDuration = null;
+        element.classList.remove('show');
+        element.classList.add('hide');
+    }
+
+    function resetFadeOut(element){
+        element.style.transitionDuration = null;
+        element.classList.add('show');
+        element.classList.remove('hide');
+    }
+
+    function resetMoveAndScale(element){
+        element.style.transform = null;
+    }
+
     return {
         fadeIn: function (element, duration) {
             element.style.transitionDuration =  `${duration}ms`;
