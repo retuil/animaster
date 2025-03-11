@@ -16,7 +16,37 @@ function animaster() {
         scale: function (element, duration, ratio) {
             element.style.transitionDuration =  `${duration}ms`;
             element.style.transform = getTransform(null, ratio);
-        }
+        },
+
+        fadeOut: function (element, duration) {
+            element.style.transitionDuration =  `${duration}ms`;
+            element.classList.add('hide');
+            element.classList.remove('show');
+        },
+
+        moveAndHide: function (element, duration) {
+            element.style.transitionDuration =  `${duration * 0.4}ms`;
+            animaster().move(element, duration, {x: element.x + 100, y: element.y});
+            element.style.transitionDuration =  `${duration * 0.6}ms`;
+            animaster().fadeOut(element, duration);
+        },
+
+        showAndHide: function (element, duration) {
+            element.style.transitionDuration =  `${duration / 3}ms`;
+            animaster().fadeIn(element, duration);
+            element.style.transitionDuration =  `${duration / 3}ms`;
+            element.style.transitionDuration =  `${duration / 3}ms`;
+            animaster().fadeOut(element, duration);
+        },
+
+        heartBeating: function (element, duration) {
+            while (true){
+                element.style.transitionDuration =  `500ms`;
+                animaster().scale(element, 1.4);
+                element.style.transitionDuration =  `500ms`;
+                animaster().scale(element, 1 / 1.4);
+            }
+        },
     }
 }
 
