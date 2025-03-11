@@ -71,13 +71,22 @@ function animaster() {
         _steps: [],
 
         addMove: function (duration, translation) {
-            this._steps.push({function: this.move, duration: duration, arguments: [translation]});
+            const func = (element) => {
+                element.style.transitionDuration = `${duration}ms`;
+                element.style.transform = getTransform(translation, null);
+            };
+
+            this._steps.push(func);
             return this;
         },
 
+        addScale: function (duration, ratio) {},
+        addFadeIn: function (duration) {},
+        addFadeOut: function (duration) {},
+
         play: function (element) {
-            for (let step of this._steps){
-                step.function(element, step.duration, ...step.arguments);
+            for (let func of this._steps){
+                func(element);
             }
             this._steps = [];
         }
@@ -95,8 +104,7 @@ function addListeners() {
     document.getElementById('movePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('moveBlock');
-            // animasterObj.move(block, 1000, {x: 100, y: 10});
-            animasterObj.addMove(1000, {x: 100, y: 10}).play(block);
+            animasterObj.move(block, 1000, {x: 100, y: 10});
         });
 
     document.getElementById('scalePlay')
