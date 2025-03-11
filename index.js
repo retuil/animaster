@@ -38,12 +38,11 @@ function animaster() {
             element.style.transitionDuration =  `${duration}ms`;
             element.classList.remove('show');
             element.classList.add('hide');
-
         },
 
         moveAndHide: function (element, duration) {
             animaster().move(element, duration * 0.4, {x: 100, y: 20});
-            animaster().fadeOut(element, duration * 0.6);
+            setTimeout(() => animaster().fadeOut(element, duration * 0.6), duration * 0.4)
         },
 
         resetMoveAndHide: function (element) {
@@ -54,17 +53,21 @@ function animaster() {
 
         showAndHide: function (element, duration) {
             animaster().fadeIn(element, duration / 3);
-            element.style.transitionDuration =  `${duration / 3}ms`;
-            animaster().fadeOut(element, duration / 3);
+            setTimeout(() => animaster().fadeOut(element, duration * 0.6), duration * 2 / 3)
         },
 
         heartBeating: function (element, duration) {
-            while (true){
-                element.style.transitionDuration =  `500ms`;
-                animaster().scale(element, 1.4);
-                element.style.transitionDuration =  `500ms`;
-                animaster().scale(element, 1 / 1.4);
-            }
+
+            let intervalId = setInterval(() => {
+                animaster().scale(element, 500, 1.4);
+                setTimeout(() => animaster().scale(element, 500, 1), 500);
+            }, 1000)
+            return {
+                stop: function () {
+                    clearInterval(intervalId);
+                    animaster().scale(element, 500, 1);
+                }
+            };
         },
 
 
@@ -95,6 +98,7 @@ function animaster() {
 
 function addListeners() {
     const animasterObj = animaster();
+    let heartbeatController;
     document.getElementById('fadeInPlay')
         .addEventListener('click', function () {
             const block = document.getElementById('fadeInBlock');
@@ -127,10 +131,15 @@ function addListeners() {
             const block = document.getElementById('showAndHideBlock');
             animasterObj.showAndHide(block, 5000);
         });
-    document.getElementById('moveAndHideReset')
+    document.getElementById('heartBeatingPlay')
         .addEventListener('click', function () {
-            const block = document.getElementById('moveAndHideBlock');
-            animasterObj.resetMoveAndHide(block);
+            const block = document.getElementById('heartBeatingBlock');
+            heartbeatController = animasterObj.heartBeating(block, 5000);
+        });
+    document.getElementById('heartBeatingStop')
+        .addEventListener('click', function () {
+            const block = document.getElementById('heartBeatingBlock');
+            if (heartbeatController) {heartbeatController.stop();}
         });
 }
 
